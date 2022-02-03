@@ -6,6 +6,62 @@
   
   <script>
 
+    const handleResponse = (response) => {
+        response.text().then((resText) => {
+          console.log(resText);
+
+          let contentType = response.headers.get('Content-Type');
+
+          const content = document.getElementById('content');
+          content.appendChild(document.createElement('hr'));
+
+          const h1 = document.createElement('h1');
+          const p = document.createElement('p');
+          const h2 = document.createElement('h2');
+
+          h2.textContent = contentType;
+
+          if (contentType === 'text/xml') {
+            let parsedResponse = new window.DOMParser().parseFromString(resText, 'text/xml');
+            h1.textContent = `Message: ${parsedResponse.querySelector('message').textContent}`;
+            p.textContent = `ID: ${parsedResponse.querySelector('id').textContent}`;
+          } else {
+            let parsedResponse = JSON.parse(resText);
+            h1.textContent = `Message: ${parsedResponse.message}`;
+            p.textContent = `ID: ${parsedResponse.id}`;
+          }
+
+          content.appendChild(h1);
+          content.appendChild(p);
+          content.appendChild(h2);
+        });
+      };
+
+      const sendFetchRequest = (url, acceptedType) => {
+        // const xhr = new XMLHttpRequest();
+        const options = {
+          method: 'GET',
+          headers: {
+            'Accept': acceptedType
+          },
+        };
+
+        let fetchPromise = fetch(url, options);
+        fetchPromise.then((response) => {
+          handleResponse(response);
+        });
+      };
+
+      const init = () => {
+        const urlDropdown = document.querySelector("#page");
+        const jsonxmlDropdown = document.querySelector("#type");
+        const sendButton = document.querySelector('#send');
+
+
+        sendButton.addEventListener('click', () => sendFetchRequest(urlDropdown.value, jsonxmlDropdown.value));
+      };
+
+      window.onload = init;
   </script>
 </head>
 <body>
