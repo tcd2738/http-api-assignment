@@ -1,20 +1,20 @@
 const http = require('http');
 const url = require('url');
 const htmlHandler = require('./htmlResponses.js');
-const jsonxmlHandler = require('./responses.js');
+const jsonxmlHandler = require('./jsonxmlResponses.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 const urlStruct = {
-    '/': htmlHandler.getIndex,
-    '/style.css': htmlHandler.getCSS,
-    '/success': jsonxmlHandler.success,
-    '/badRequest': jsonxmlHandler.badRequest,
-    '/unauthorized': jsonxmlHandler.unauthorized,
-    '/forbidden': jsonxmlHandler.forbidden,
-    '/internal': jsonxmlHandler.internal,
-    '/notImplemented': jsonxmlHandler.notImplemented,
-    notFound: jsonxmlHandler.notFound
+  '/': htmlHandler.getIndex,
+  '/style.css': htmlHandler.getCSS,
+  '/success': jsonxmlHandler.success,
+  '/badRequest': jsonxmlHandler.badRequest,
+  '/unauthorized': jsonxmlHandler.unauthorized,
+  '/forbidden': jsonxmlHandler.forbidden,
+  '/internal': jsonxmlHandler.internal,
+  '/notImplemented': jsonxmlHandler.notImplemented,
+  notFound: jsonxmlHandler.notFound,
 };
 
 const onRequest = (request, response) => {

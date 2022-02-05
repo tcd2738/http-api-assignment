@@ -12,28 +12,17 @@
 
           let contentType = response.headers.get('Content-Type');
 
-          const content = document.getElementById('content');
-          content.appendChild(document.createElement('hr'));
-
-          const h1 = document.createElement('h1');
-          const p = document.createElement('p');
-          const h2 = document.createElement('h2');
-
-          h2.textContent = contentType;
+          const urlDropdown = document.querySelector("#page");
+          document.querySelector('#pageTitle').textContent = urlDropdown.options[urlDropdown.selectedIndex].text;
+          document.querySelector('#contentType').textContent = contentType;
 
           if (contentType === 'text/xml') {
             let parsedResponse = new window.DOMParser().parseFromString(resText, 'text/xml');
-            h1.textContent = `Message: ${parsedResponse.querySelector('message').textContent}`;
-            p.textContent = `ID: ${parsedResponse.querySelector('id').textContent}`;
+            document.querySelector("#message").textContent = `Message: ${parsedResponse.querySelector('message').textContent}`;
           } else {
             let parsedResponse = JSON.parse(resText);
-            h1.textContent = `Message: ${parsedResponse.message}`;
-            p.textContent = `ID: ${parsedResponse.id}`;
+            document.querySelector("#message").textContent = `Message: ${parsedResponse.message}`;
           }
-
-          content.appendChild(h1);
-          content.appendChild(p);
-          content.appendChild(h2);
         });
       };
 
@@ -83,6 +72,9 @@
     <button id="send">Send</button>
   </section>
   <section id="content">
+    <h1 id="pageTitle"></h1>
+    <p id="message"></p>
+    <p id="contentType"></p>
   </section>
 </body>
 </html>
