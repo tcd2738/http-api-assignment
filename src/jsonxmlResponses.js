@@ -9,7 +9,6 @@ const respond = (request, response, status, content, type) => {
 };
 
 const success = (request, response, acceptedTypes) => {
-  console.log(acceptedTypes[0]);
   if (acceptedTypes[0] === 'text/xml') {
     let responseXML = '<response>';
     responseXML += '<message>This is a successful response.</message>';
@@ -25,8 +24,79 @@ const success = (request, response, acceptedTypes) => {
   return respond(request, response, 200, jsonString, 'application/json');
 };
 
+const badRequest = (request, response, acceptedTypes, params) => {
+  // if necessary param is found
+  if (params.valid === 'true') {
+    if (acceptedTypes[0] === 'text/xml') {
+      let responseXML = '<response>';
+      responseXML += '<message>This request has the required parameters.</message>';
+      responseXML += '</response>';
+
+      return respond(request, response, 200, responseXML, 'text/xml');
+    }
+    const responseJSON = {
+      message: 'This request has the required parameters.',
+    };
+
+    const jsonString = JSON.stringify(responseJSON);
+    return respond(request, response, 200, jsonString, 'application/json');
+  }
+
+  // if necessary param is not found
+  if (acceptedTypes[0] === 'text/xml') {
+    let responseXML = '<response>';
+    responseXML += '<message>Missing valid query parameter set to true.</message>';
+    responseXML += '<id>badRequest</id>';
+    responseXML += '</response>';
+
+    return respond(request, response, 400, responseXML, 'text/xml');
+  }
+  const responseJSON = {
+    message: 'Missing valid query parameter set to true.',
+    id: 'badRequest',
+  };
+
+  const jsonString = JSON.stringify(responseJSON);
+  return respond(request, response, 400, jsonString, 'application/json');
+};
+
+const unauthorized = (request, response, acceptedTypes, params) => {
+  // if necessary param is found
+  if (params.loggedIn === 'yes') {
+    if (acceptedTypes[0] === 'text/xml') {
+      let responseXML = '<response>';
+      responseXML += '<message>You have successfully viewed the content.</message>';
+      responseXML += '</response>';
+
+      return respond(request, response, 200, responseXML, 'text/xml');
+    }
+    const responseJSON = {
+      message: 'You have successfully viewed the content.',
+    };
+
+    const jsonString = JSON.stringify(responseJSON);
+    return respond(request, response, 200, jsonString, 'application/json');
+  }
+
+  // if necessary param is not found
+  if (acceptedTypes[0] === 'text/xml') {
+    let responseXML = '<response>';
+    responseXML += '<message>Missing loggedIn query parameter set to yes.</message>';
+    responseXML += '<id>unauthorized</id>';
+    responseXML += '</response>';
+
+    return respond(request, response, 401, responseXML, 'text/xml');
+  }
+  const responseJSON = {
+    message: 'Missing loggedIn query parameter set to yes.',
+    id: 'unauthorized',
+  };
+
+  const jsonString = JSON.stringify(responseJSON);
+  return respond(request, response, 401, jsonString, 'application/json');
+};
+
 const forbidden = (request, response, acceptedTypes) => {
-  console.log(acceptedTypes[0]);
   if (acceptedTypes[0] === 'text/xml') {
     let responseXML = '<response>';
     responseXML += '<message>You do not have access to this content.</message>';
@@ -45,7 +115,6 @@ const forbidden = (request, response, acceptedTypes) => {
 };
 
 const internal = (request, response, acceptedTypes) => {
-  console.log(acceptedTypes[0]);
   if (acceptedTypes[0] === 'text/xml') {
     let responseXML = '<response>';
     responseXML += '<message>Internal server error. Something went wrong.</message>';
@@ -64,7 +133,6 @@ const internal = (request, response, acceptedTypes) => {
 };
 
 const notImplemented = (request, response, acceptedTypes) => {
-  console.log(acceptedTypes[0]);
   if (acceptedTypes[0] === 'text/xml') {
     let responseXML = '<response>';
     responseXML += '<message>A get request for this page has not been implemented yet. Check again later for updated content.</message>';
@@ -83,7 +151,6 @@ const notImplemented = (request, response, acceptedTypes) => {
 };
 
 const notFound = (request, response, acceptedTypes) => {
-  console.log(acceptedTypes[0]);
   if (acceptedTypes[0] === 'text/xml') {
     let responseXML = '<response>';
     responseXML += '<message>The page you are looking for was not found.</message>';
@@ -103,6 +170,8 @@ const notFound = (request, response, acceptedTypes) => {
 
 module.exports = {
   success,
+  badRequest,
+  unauthorized,
   notFound,
   notImplemented,
   internal,

@@ -8,14 +8,18 @@
 
     const handleResponse = (response) => {
         response.text().then((resText) => {
+          // log the response as per the assignment requirements
           console.log(resText);
 
+          // grab and display the content type
           let contentType = response.headers.get('Content-Type');
-
-          const urlDropdown = document.querySelector("#page");
-          document.querySelector('#pageTitle').textContent = urlDropdown.options[urlDropdown.selectedIndex].text;
           document.querySelector('#contentType').textContent = contentType;
 
+          // grab and display the url being called
+          const urlDropdown = document.querySelector("#page");
+          document.querySelector('#pageTitle').textContent = urlDropdown.options[urlDropdown.selectedIndex].text;
+
+          // display the response message
           if (contentType === 'text/xml') {
             let parsedResponse = new window.DOMParser().parseFromString(resText, 'text/xml');
             document.querySelector("#message").textContent = `Message: ${parsedResponse.querySelector('message').textContent}`;
@@ -27,7 +31,6 @@
       };
 
       const sendFetchRequest = (url, acceptedType) => {
-        // const xhr = new XMLHttpRequest();
         const options = {
           method: 'GET',
           headers: {
@@ -42,10 +45,10 @@
       };
 
       const init = () => {
+        // grab all the values from the html required to call the API
         const urlDropdown = document.querySelector("#page");
         const jsonxmlDropdown = document.querySelector("#type");
         const sendButton = document.querySelector('#send');
-
 
         sendButton.addEventListener('click', () => sendFetchRequest(urlDropdown.value, jsonxmlDropdown.value));
       };
